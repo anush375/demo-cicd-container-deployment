@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo "Something'
+                sh 'echo "Somethinng'
                 git 'https://github.com/user/repo.git'
             }
         }
