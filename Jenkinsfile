@@ -4,6 +4,8 @@ pipeline {
         IMAGE_NAME = "my-flask-app"
         IMAGE_TAG = "v${BUILD_NUMBER}"
         AWS_REGION = "us-east-1"
+        ECR_REPO = "<851725352687.dkr.ecr.us-east-1.amazonaws.com/my-flask-app"
+
         //EC2_IP = "ec2_public_ip"
     }
     
@@ -20,15 +22,12 @@ pipeline {
                 }
             }
         }
-        stage('dockerAuthPush'){
-            steps{
-                script{
-                    withCredentials([usernamePassword(credentialsId: 'docker-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
-                        // some block
-                        sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} anush12/${IMAGE_NAME}:${IMAGE_TAG}'
-                        sh 'docker push anush12/${IMAGE_NAME}:${IMAGE_TAG}'
-                    }
+        stage('Push Docker Image to ECR') {
+            steps {
+                script {
+                    sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}'
+                    sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}'
+                    sh 'docker push ${ECR_REPO}:${IMAGE_TAG}'
                 }
             }
         }         
