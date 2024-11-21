@@ -12,7 +12,7 @@ pipeline {
     stages {
         // stage('Checkout') {
         //     steps {
-        //         git 'https://github.com/yourusername/your-repo.gitt'
+        //         git 'https://github.com/yourusername/your-repo.git'
         //     }
         // }
         stage('Build Docker Image') {
@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     //sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}'
-                    sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}'
+                    //sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}'
                     sh 'docker push ${ECR_REPO}:${IMAGE_TAG}'
                 }
             }
