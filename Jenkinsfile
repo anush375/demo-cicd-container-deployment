@@ -26,7 +26,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                         sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
                         // some block
-                        sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} your_dockerhub_username/${IMAGE_NAME}:${IMAGE_TAG}'
+                        sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} anush12/${IMAGE_NAME}:${IMAGE_TAG}'
                         sh 'docker push anush12/${IMAGE_NAME}:${IMAGE_TAG}'
                     }
                 }
