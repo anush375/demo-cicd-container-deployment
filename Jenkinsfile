@@ -1,21 +1,42 @@
 pipeline {
     agent any
+    environment {
+        IMAGE_NAME = "my-flask-app"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
+        AWS_REGION = "us-east-1"
+        //EC2_IP = "ec2_public_ip"
+    }
+    
     stages {
-        stage('Checkout') {
-            steps {
-                sh 'echo "Somethinng'
-                git 'https://github.com/user/repo.git'
-            }
-        }
-        // stage('Build Docker Image') {
+        // stage('Checkout') {
         //     steps {
-        //         sh 'docker build -t myapp:${BUILD_NUMBER} .'
+        //         git 'https://github.com/yourusername/your-repo.git'
         //     }
         // }
-        // stage('Push to Docker Hub') {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                }
+            }
+        }
+        stage('dockerAuthPush'){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'docker-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
+                        // some block
+                        sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} your_dockerhub_username/${IMAGE_NAME}:${IMAGE_TAG}'
+                        sh 'docker push anush12/${IMAGE_NAME}:${IMAGE_TAG}'
+                    }
+                }
+            }
+        }         
+
+        // stage('Deploy to EKS') {
         //     steps {
-        //         withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-        //             sh 'docker push myapp:${BUILD_NUMBER}'
+        //         script {
+        //             sh 'kubectl apply -f deployment.yml'
         //         }
         //     }
         // }
