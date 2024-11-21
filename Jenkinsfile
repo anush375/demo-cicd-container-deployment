@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo "Testing"'
-                //git 'https://github.com/user/repo.git'
+                sh 'echo "Something'
+                git 'https://github.com/user/repo.git'
             }
         }
         // stage('Build Docker Image') {
