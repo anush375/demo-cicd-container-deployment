@@ -5,16 +5,9 @@ pipeline {
         IMAGE_TAG = "v${BUILD_NUMBER}"
         AWS_REGION = "us-east-1"
         ECR_REPO = "851725352687.dkr.ecr.us-east-1.amazonaws.com/my-flask-app"
-
-        //EC2_IP = "ec2_public_ip"
     }
     
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         git 'https://github.com/yourusername/your-repo.git'
-        //     }
-        // }
         stage('Build Docker Image') {
             steps {
                 script {
@@ -32,12 +25,12 @@ pipeline {
             }
         }         
 
-        // stage('Deploy to EKS') {
-        //     steps {
-        //         script {
-        //             sh 'kubectl apply -f deployment.yml'
-        //         }
-        //     }
-        // }
+        stage('Deploy to EKS') {
+            steps {
+                script {
+                    sh 'kubectl apply -f deployment.yml'
+                }
+            }
+        }
     }
 }
